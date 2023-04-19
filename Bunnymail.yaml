@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bunnymail-pvc
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bunnymail
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bunnymail
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: bunnymail
+    spec:
+      containers:
+      - name: bunnymail
+        image: bunnymail:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: database
+          value: 'Data Source=/var/opt/sqlite/opt/bunnymailconfig.db'
+        - name: rabbithost
+          value: rabbitmq.rabbit
+        - name: rabbituser
+          value: '###'
+        - name: rabbitpass
+          value: '###'
+        - name: sendgridapikey
+          value: 'abcdefg12345678'
+        - name: swagger
+          value: ''
+        - name: username
+          value: demo@contoso.com
+        - name: password
+          value: password
+        volumeMounts:
+        - name: sqlitedb
+          mountPath: /var/opt/sqlite/data
+      volumes:
+      - name: sqlitedb
+        persistentVolumeClaim:
+          claimName: bunnymail-pvc
