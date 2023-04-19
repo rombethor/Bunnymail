@@ -2,6 +2,7 @@ using Bunnymail;
 using Bunnymail.Configuration;
 using Bunnymail.Messaging;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,9 @@ builder.Services.AddAuthentication("Basic")
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContextFactory<ConfigDbContext>(sp => ConfigDbContextFactory.Initialise(builder.Configuration));
+
+//Make the database
+ConfigDbContextFactory.Instance.CreateDbContext().Database.Migrate();
 
 RabbitMQClient rabbitMqClient = new(builder.Configuration);
 rabbitMqClient.RegisterConsumer(new SendGridMessenger(builder.Configuration));
