@@ -20,7 +20,7 @@ Ensure that the configuration, or environment variables, contain the following k
 
 ## Kubernetes Manifests
 
-Here are the Kubernetes manifests which can be used to set up Bunnymail in k8s.
+[Here](Bunnymail.yaml) are the Kubernetes manifests which can be used to set up Bunnymail in k8s.
 
 ## Functionality
 
@@ -38,13 +38,13 @@ A message similar to the following is sent via the message queue:
 
 The `event` specified the template to use.  This maps to a SendGrid template in the Sqlite database which is turned into a message.
 
-Event-Template mapping requires the following parameters:
+Event-Template mapping requires the following parameters, in addition to the `event` name:
 
 ```json
 {
 	"templateId": "d-mytemplateid123",
 	"fromAddress": "no-reply@contoso.com",
-	"toAddress": "no-reply@contoso.com"
+	"fromName": "Hypercombiglobalmeganet"
 }
 ```
 
