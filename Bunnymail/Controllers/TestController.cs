@@ -14,11 +14,9 @@ namespace Bunnymail.Controllers
     [Authorize]
     public class TestController : ControllerBase
     {
-        readonly ConfigDbContext _db;
-
-        public TestController(ConfigDbContext db)
+        
+        public TestController()
         {
-            _db = db;
         }
 
         [HttpPost]

@@ -1,9 +1,26 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bunnymail-pv
+  namespace: {{ .Release.Namespace }}
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: bunnymail-pvc
   namespace: {{ .Release.Namespace }}
 spec:
+  storageClassName: manual
   accessModes:
   - ReadWriteMany
   resources:
@@ -31,13 +48,13 @@ spec:
     spec:
       containers:
       - name: bunnymail
-        image: bunnymail:1.0.0
+        image: bunnymail:6.2.1
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
-        - name: database
-          value: 'Data Source=/var/opt/sqlite/opt/bunnymailconfig.db'
+        - name: configfile
+          value: '/usr/db/bunnymailconfig.json'
         - name: rabbithost
           value: rabbitmq.rabbit
         - name: rabbituser
@@ -48,14 +65,29 @@ spec:
           value: 'abcdefg12345678'
         - name: swagger
           value: ''
+        - name: logmessages
+          value: 'yes'
         - name: username
           value: demo@contoso.com
         - name: password
           value: password
         volumeMounts:
-        - name: sqlitedb
-          mountPath: /var/opt/sqlite/data
+        - name: confpath
+          mountPath: /usr/db
       volumes:
-      - name: sqlitedb
+      - name: confpath
         persistentVolumeClaim:
           claimName: bunnymail-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bunnymail-svc
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: bunnymail
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP

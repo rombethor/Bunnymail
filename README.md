@@ -14,17 +14,21 @@ Ensure that the configuration, or environment variables, contain the following k
 | rabbithost | The endpoint of the RabbitMQ message broker |
 | rabbituser | The username for the RabbitMQ message broker |
 | rabbitpass | The password for the RabbitMQ message broker |
-| database | A connection string pointing to the destination of the Sqlite configuration database file |
+| configfile | The destination of the config JSON file (should be on the persistent volume) |
 | username | A username for accessing the HTTP API and changing the config |
 | password | A password for accessing the HTTP API and changing the config |
 
 ## Kubernetes Manifests
 
-[Here](Bunnymail.yaml) are the Kubernetes manifests which can be used to set up Bunnymail in k8s.
+[Here](Bunnymail.yaml) are the Kubernetes manifests which are exemplary for setting up Bunnymail in k8s.
+
+It creates a `PersistentVolume`, a `PersistentVolumeClaim`, a `Service` and a `Deployment`.
+
+| Running them as-is will not work, you need to add your own configuration specific to your system.  Use of Helm and Secrets is recommended.
 
 ## Functionality
 
-A message similar to the following is sent via the message queue:
+A message similar to the following is sent via the message queue to the `mail.out` exchange:
 
 ```json
 {
@@ -47,4 +51,14 @@ Event-Template mapping requires the following parameters, in addition to the `ev
 	"fromName": "Hypercombiglobalmeganet"
 }
 ```
+
+## HTTP API
+
+### Authentication
+
+Basic authentication is used.  There is only one user, whose username and password are set via the environment variables.
+
+### Swagger
+
+You can open up the route to `/swagger` with the environment variable, then the documentation for editing template parameters via the API will be visible.
 

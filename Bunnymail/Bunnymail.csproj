@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileTag>bunnymail</DockerfileTag>
-    <Version>6.1.0</Version>
+    <Version>6.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,10 @@
     <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
     <PackageReference Include="SendGrid" Version="9.28.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\Entities\" />
   </ItemGroup>
 
 </Project>

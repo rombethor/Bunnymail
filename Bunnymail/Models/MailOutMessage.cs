@@ -11,6 +11,6 @@ namespace Bunnymail.Models
         public string Recipient { get; set; } = string.Empty;
 
         [JsonPropertyName("data")]
-        public Dictionary<string, string>? Data;
+        public Dictionary<string, string>? Data { get; set; } = new Dictionary<string, string>();
     }
 }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Bunnymail.Models
 {
-    public class SetTemplateOptions
+    public class TemplateOptions
     {
         [Required, JsonPropertyName("templateId")]
         public string? TemplateId { get; set; }
